@@ -19,12 +19,14 @@ export const handleUnhandledRejection = (server) => {
     };
 };
 
-export const handleUnhandledRoutes = (req, res, next) => {
-    next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+const handleUnhandledRoutes = (error, res) => {
+    res.status(error.statusCode).json({
+        status: error.status,
+        message: "Can't find the requested route on this server",
+    });
 };
 
 const sendErrorDev = (error, res) => {
-    // console.log(error);
     res.status(error.statusCode).json({
         status: error.status,
         message: error.message,
@@ -55,13 +57,12 @@ const sendErrorProd = (error, res) => {
 
 export const globalErrorHandler = (error, req, res, next) => {
     console.log('*** Global Error Handler ***');
-    // console.log({ NODE_ENV: process.env.NODE_ENV });
     console.log(error.stack);
-
     error.statusCode = error.statusCode || 500;
     error.status = error.status || 'error';
 
     if (process.env.NODE_ENV === 'dev') return sendErrorDev(error, res);
+    if (error.message === 'not found') handleUnhandledRoutes(error, res);
     if (error.message.includes('ER_DUP_ENTRY')) {
         error.isOperational = true;
         handleDuplicateField(error);
@@ -70,7 +71,17 @@ export const globalErrorHandler = (error, req, res, next) => {
     return sendErrorProd(error, res);
 };
 
+/**
+ * Wrapper function for redirecting async errors onto the express app's global error handling middleware
+ * @param {*} fn - async function whose errors will be caught
+ */
+export const catchAsync = (fn) => (req, res, next) => {
+    fn(req, res, next).catch((error) => {
+        next(error);
+    });
+};
+
 export const handleDBConnectionError = (error) => {
-    console.error('error connecting to db: ' + error.stack);
+    console.error('error trying to connect to db: ' + error.stack);
     process.exit(1);
 };
