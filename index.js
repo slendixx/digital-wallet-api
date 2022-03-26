@@ -1,14 +1,24 @@
 import dotenv from 'dotenv';
+//read environment variables
 dotenv.config({ path: './config.env' });
-//import error controller
+
+import errorController from './src/errors/errorController';
 import app from './src/app';
 import db from './src/models/dbConnection';
 
 //listen for uncaught synchronous exceptions
-//init db connection
+process.on('uncaughtException', errorController.handleUncaughtException);
+
+//TODO init db connection
 
 //listen for requests
 const port = Number(process.env.PORT) || 3000;
 const server = app.listen(port, () => {
     console.log('Server started. Listening for requests on port: ' + port);
 });
+
+//start listening for unhandled rejections on the global asynchronous exception system
+process.on(
+    'unhandledRejection',
+    errorController.handleUnhandledRejection(server)
+);
