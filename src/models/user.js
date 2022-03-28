@@ -43,6 +43,7 @@ export const select = (id) => {
     const result = {
         ok: false,
     };
+
     const connection = db.getConnection();
     const selectUserQuery =
         'SELECT id, first_name, last_name FROM user WHERE id = ?';
