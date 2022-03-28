@@ -4,7 +4,8 @@ import passport from 'passport';
 import AppError from './errors/appError';
 import errorController from './errors/errorController';
 import './auth/passportConfig';
-//TODO import routers
+import './security/passwordDenyList';
+import userRouter from './routes/userRoutes';
 
 const app = express();
 
@@ -18,8 +19,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use(passport.initialize());
-
-//TODO set up routing
+app.use('/api/users', userRouter);
 
 //handle unhandled routes
 app.all('*', (req, res, next) => {
