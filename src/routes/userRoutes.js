@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.use('/:userId/transactions', transactionRouter);
 
-router.route('/').post(contr);
-router.route('/:userId').get();
+router.route('/').post(controller.create);
+router.route('/:userId').get(controller.getById);
 
 export default router;
