@@ -9,7 +9,7 @@ const passwordDenyList = JSON.parse(readFyleSync('./passwordDenyList'));
  * @param {String} candidatePassword
  * @returns {Promise}
  */
-const testPassword = (candidatePassword) => {
+const testPasswordAgainstDenyList = (candidatePassword) => {
     return new Promise((resolve, reject) => {
         if (passwordDenyList.includes(candidatePassword)) {
             reject(false);
@@ -18,4 +18,4 @@ const testPassword = (candidatePassword) => {
     });
 };
 
-export default testPassword;
+export default testPasswordAgainstDenyList;
