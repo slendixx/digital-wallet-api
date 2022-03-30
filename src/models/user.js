@@ -22,16 +22,25 @@ module.exports.insert = async (data) => {
     const hashCost = await calculateIdealHashCost();
     const hashedPassword = await bcrypt.hash(userData.password, hashCost);
     //TODO research why it is not advisable to use pepper with bcrypt
-    userData = hashedPassword;
+    userData.password = hashedPassword;
 
+    console.log({ completedUserData: userData });
     //query db
     const connection = db.getConnection();
     const insertUserQuery =
-        'INSERT INTO user (first_name, last_name, email, password) VALUES ?';
+        'INSERT INTO user (first_name, last_name, email, password) VALUES (?)';
 
-    const values = [...userData];
+    const values = [
+        userData.firstName,
+        userData.lastName,
+        userData.email,
+        userData.password,
+    ];
     try {
-        await db.queryAsync(connection, insertUserQuery, [values]);
+        result.rows = await db.queryAsync(connection, insertUserQuery, [
+            values,
+        ]);
+
         result.ok = true;
     } catch (error) {
         result.message = error;
@@ -40,7 +49,7 @@ module.exports.insert = async (data) => {
     return result;
 };
 
-module.exports.select = (id) => {
+module.exports.select = async (id) => {
     const result = {
         ok: false,
     };
@@ -49,7 +58,7 @@ module.exports.select = (id) => {
     const selectUserQuery =
         'SELECT id, first_name, last_name FROM user WHERE id = ?';
     try {
-        await db.queryAsync(connection, selectUserQuery, id);
+        result.rows = await db.queryAsync(connection, selectUserQuery, id);
         result.ok = true;
     } catch (error) {
         result.message = error;
