@@ -3,7 +3,7 @@ const cors = require('cors');
 const passport = require('passport');
 const AppError = require('./errors/appError');
 const errorController = require('./errors/errorController');
-require('./auth/passportConfig');
+//require('./auth/passportConfig');
 require('./security/passwordDenyList');
 const userRouter = require('./routes/userRoutes');
 
@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 
     next();
 });
-app.use(passport.initialize());
+//app.use(passport.initialize());
 app.use('/api/users', userRouter);
 
 //handle unhandled routes
