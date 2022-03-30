@@ -1,6 +1,7 @@
-const bcrypt = require( 'bcrypt');
-const calculateIdealHashCost = require( '../security/calculateIdealHashCost');
-const db = require( './dbConnection');
+const bcrypt = require('bcrypt');
+const calculateIdealHashCost = require('../security/calculateIdealHashCost');
+const db = require('./dbConnection');
+const validateUserData = require('./userValidation');
 
 module.exports.insert = async (data) => {
     const userData = { ...data }; //make a carbon copy of the provided user data to avoid modifying the function argument
@@ -8,12 +9,12 @@ module.exports.insert = async (data) => {
         ok: false,
     };
     try {
-        validateUserData(userData);
+        await validateUserData(userData);
     } catch (error) {
-        console.log('validation error: ' + error);
+        console.log('validation error: ' + error.message);
         result.ok = false;
-        result.message(error); //TODO test validation errors
-        return;
+        result.message = error; //TODO test validation errors
+        return result;
     }
     //complete user data
     userData.firstName = userData.firstName.toLowerCase();
