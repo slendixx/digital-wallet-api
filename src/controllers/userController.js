@@ -1,8 +1,8 @@
-import AppError from '../errors/appError';
-import { catchAsync } from '../errors/errorController';
-import user from '../models/user';
+const AppError = require('../errors/appError');
+const { catchAsync } = require('../errors/errorController');
+const user = require('../models/user');
 
-export const create = catchAsync(async (req, res, next) => {
+module.exports.create = catchAsync(async (req, res, next) => {
     const userData = {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -20,7 +20,7 @@ export const create = catchAsync(async (req, res, next) => {
     });
 });
 
-export const getById = catchAsync(async (req, res, next) => {
+module.exports.getById = catchAsync(async (req, res, next) => {
     const id = Number(req.params.userId);
     const result = await user.select(id);
 

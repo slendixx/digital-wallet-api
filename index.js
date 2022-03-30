@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 //read environment variables
 dotenv.config({ path: './config.env' });
 
-import errorController from './src/errors/errorController';
-import app from './src/app';
-import db from './src/models/dbConnection';
+const errorController = require('./src/errors/errorController');
+const app = require('./src/app');
+//const db = require('./src/models/dbConnection');
 
 //listen for uncaught synchronous exceptions
 process.on('uncaughtException', errorController.handleUncaughtException);

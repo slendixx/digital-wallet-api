@@ -1,13 +1,11 @@
-import AppError from './appError';
-
-export const handleUncaughtException = (error) => {
+module.exports.handleUncaughtException = (error) => {
     console.error('*** Unhandled exception ***');
     console.log(error);
 
     process.exit(1);
 };
 
-export const handleUnhandledRejection = (server) => {
+module.exports.handleUnhandledRejection = (server) => {
     // use the closure to be able to user server object inside the returned function
     return (error) => {
         console.error('*** Unhandled Rejection ***');
@@ -55,7 +53,7 @@ const sendErrorProd = (error, res) => {
     });
 };
 
-export const globalErrorHandler = (error, req, res, next) => {
+module.exports.globalErrorHandler = (error, req, res, next) => {
     console.log('*** Global Error Handler ***');
     console.log(error.stack);
     error.statusCode = error.statusCode || 500;
@@ -75,13 +73,13 @@ export const globalErrorHandler = (error, req, res, next) => {
  * Wrapper function for redirecting async errors onto the express app's global error handling middleware
  * @param {*} fn - async function whose errors will be caught
  */
-export const catchAsync = (fn) => (req, res, next) => {
+module.exports.catchAsync = (fn) => (req, res, next) => {
     fn(req, res, next).catch((error) => {
         next(error);
     });
 };
 
-export const handleDBConnectionError = (error) => {
+module.exports.handleDBConnectionError = (error) => {
     console.error('error trying to connect to db: ' + error.stack);
     process.exit(1);
 };

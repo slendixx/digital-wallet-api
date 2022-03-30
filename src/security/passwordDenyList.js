@@ -1,4 +1,4 @@
-import { readFyleSync } from 'fs';
+const { readFyleSync } = require('fs');
 
 const passwordDenyList = JSON.parse(readFyleSync('./passwordDenyList'));
 
@@ -18,4 +18,4 @@ const testPasswordAgainstDenyList = (candidatePassword) => {
     });
 };
 
-export default testPasswordAgainstDenyList;
+module.exports = testPasswordAgainstDenyList;

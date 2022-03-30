@@ -1,11 +1,11 @@
-import express from 'express';
-import cors from 'cors';
-import passport from 'passport';
-import AppError from './errors/appError';
-import errorController from './errors/errorController';
-import './auth/passportConfig';
-import './security/passwordDenyList';
-import userRouter from './routes/userRoutes';
+const express = require('express');
+const cors = require('cors');
+const passport = require('passport');
+const AppError = require('./errors/appError');
+const errorController = require('./errors/errorController');
+require('./auth/passportConfig');
+require('./security/passwordDenyList');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 

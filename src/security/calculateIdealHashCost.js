@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+const bcrypt = require('bcrypt');
 /**
  *  This function runs a micro-benchmark to figure out how fast the CPU is.
  *  The target is for a bcrypt hash to take at least 250 ms.
@@ -22,4 +22,4 @@ const calculateIdealHashCost = async () => {
     return cost;
 };
 
-export default calculateIdealHashCost;
+module.exports = calculateIdealHashCost;

@@ -1,5 +1,5 @@
-import testPasswordAgainstDenyList from '../security/passwordDenyList';
-import AppError from '../errors/appError';
+const testPasswordAgainstDenyList = require('../security/passwordDenyList');
+const AppError = require('../errors/appError');
 
 const validateUserData = async (userData) => {
     if (!userData.firstName) {
@@ -55,4 +55,4 @@ const validateEmail = (email) => {
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
 };
-export default validateUserData;
+module.exports = validateUserData;

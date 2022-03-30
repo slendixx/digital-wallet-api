@@ -1,8 +1,8 @@
-import bcrypt from 'bcrypt';
-import calculateIdealHashCost from '../security/calculateIdealHashCost';
-import db from './dbConnection';
+const bcrypt = require( 'bcrypt');
+const calculateIdealHashCost = require( '../security/calculateIdealHashCost');
+const db = require( './dbConnection');
 
-export const insert = async (data) => {
+module.exports.insert = async (data) => {
     const userData = { ...data }; //make a carbon copy of the provided user data to avoid modifying the function argument
     const result = {
         ok: false,
@@ -39,7 +39,7 @@ export const insert = async (data) => {
     return result;
 };
 
-export const select = (id) => {
+module.exports.select = (id) => {
     const result = {
         ok: false,
     };

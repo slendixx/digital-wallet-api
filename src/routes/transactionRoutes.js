@@ -1,6 +1,6 @@
-import express from 'express';
-import controller from '../controllers/transactionController';
-import { getById } from '../controllers/userController';
+const express = require('express');
+const controller = require('../controllers/transactionController');
+const { getById } = require('../controllers/userController');
 //const passport = require('passport');
 //const { restrictTo } = require('../controllers/authController');
 
@@ -13,4 +13,4 @@ router
     .patch(controller.updateById)
     .delete(controller.deleteById);
 
-export default router;
+module.exports = router;
