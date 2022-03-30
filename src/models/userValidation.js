@@ -23,7 +23,7 @@ const validateUserData = async (userData) => {
     if (!userData.email) {
         throw new AppError('No email name was provided', 400);
     }
-    if (validateEmail(userData.email)) {
+    if (!isValidEmail(userData.email)) {
         throw new AppError('Invalid email', 400);
     }
     if (userData.email > 255) {
@@ -35,7 +35,7 @@ const validateUserData = async (userData) => {
     if (userData.password.length < 12) {
         throw new AppError('Password must be at least 12 characters long', 400);
     }
-    if (userData.password.length < 255) {
+    if (userData.password.length > 255) {
         throw new AppError(
             'Password must be less than 255 characters long',
             400
@@ -48,11 +48,9 @@ const validateUserData = async (userData) => {
         throw new AppError('Password is in deny list.', 400);
     }
 };
-const validateEmail = (email) => {
-    return String(email)
-        .toLowerCase()
-        .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
+const isValidEmail = (email) => {
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+        String(email).toLowerCase()
+    );
 };
 module.exports = validateUserData;
