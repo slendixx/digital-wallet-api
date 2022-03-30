@@ -25,7 +25,7 @@ module.exports.getById = catchAsync(async (req, res, next) => {
     const result = await user.select(id);
 
     if (!result.ok) return next(new AppError(result.message, 400));
-    if (result.length === 0)
+    if (result.rows.length === 0)
         return next(new AppError('No user found for the given id.', 404));
 
     res.status(200).json({
