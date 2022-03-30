@@ -19,12 +19,12 @@ app.use((req, res, next) => {
     next();
 });
 //app.use(passport.initialize());
-app.use('/api/users', userRouter);
+app.use('/api/v1/users', userRouter);
 
 //handle unhandled routes
 app.all('*', (req, res, next) => {
     console.log(req.originalUrl);
-    next(new AppError('not found', 404));
+    next(new AppError('request url not found', 404));
 });
 
 //set up global error handler
