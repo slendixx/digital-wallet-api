@@ -1,6 +1,8 @@
-const { readFyleSync } = require('fs');
+const { readFileSync } = require('fs');
 
-const passwordDenyList = JSON.parse(readFyleSync('./passwordDenyList'));
+const passwordDenyList = JSON.parse(
+    readFileSync(__dirname + '/passwordDenyList.json')
+);
 
 /**
  * Tests password against a dictionary of forbidden passwords.
