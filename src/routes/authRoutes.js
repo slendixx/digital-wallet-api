@@ -10,5 +10,6 @@ router
         passport.authenticate('local', { session: false }),
         controller.signJwt
     );
+router.route('/forgot-password').post(controller.createPasswordRecoveryToken);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const calculateIdealHashCost = require('../security/calculateIdealHashCost');
 const db = require('./dbConnection');
-const validateUserData = require('./userValidation');
+const validation = require('./userValidation');
 
 module.exports.insert = async (data) => {
     const userData = { ...data }; //make a carbon copy of the provided user data to avoid modifying the function argument
@@ -9,7 +9,7 @@ module.exports.insert = async (data) => {
         ok: false,
     };
     try {
-        await validateUserData(userData);
+        await validation.validateUserData(userData);
     } catch (error) {
         console.log('validation error: ' + error.message);
         result.ok = false;
@@ -79,4 +79,22 @@ module.exports.findOne = async (email) => {
         result.ok = false;
     }
     return result;
+};
+
+module.exports.createPasswordRecoveryToken = async (email) => {
+    const result = {
+        ok: false,
+    };
+    //validate email
+    const isValidEmail = validation.validateEmail;
+    if (!isValidEmail) {
+        result.message = 'Invalid email';
+        return result;
+    }
+    //check if user exists
+    const response = await module.exports.findOne(email);
+    if (response.rows === 0) {
+        result.message = 'No user found for the given email';
+        return result;
+    }
 };
