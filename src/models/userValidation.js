@@ -53,4 +53,6 @@ const isValidEmail = (email) => {
         String(email).toLowerCase()
     );
 };
-module.exports = validateUserData;
+
+module.exports.validateEmail = isValidEmail;
+module.exports.validateUserData = validateUserData;
