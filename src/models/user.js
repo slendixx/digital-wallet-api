@@ -80,21 +80,3 @@ module.exports.findOne = async (email) => {
     }
     return result;
 };
-
-module.exports.createPasswordRecoveryToken = async (email) => {
-    const result = {
-        ok: false,
-    };
-    //validate email
-    const isValidEmail = validation.validateEmail;
-    if (!isValidEmail) {
-        result.message = 'Invalid email';
-        return result;
-    }
-    //check if user exists
-    const response = await module.exports.findOne(email);
-    if (response.rows === 0) {
-        result.message = 'No user found for the given email';
-        return result;
-    }
-};
