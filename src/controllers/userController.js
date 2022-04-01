@@ -1,5 +1,6 @@
 const AppError = require('../errors/appError');
 const { catchAsync } = require('../errors/errorController');
+const jsonwebtoken = require('jsonwebtoken');
 const user = require('../models/user');
 
 module.exports.create = catchAsync(async (req, res, next) => {
@@ -31,5 +32,21 @@ module.exports.getById = catchAsync(async (req, res, next) => {
     res.status(200).json({
         ok: true,
         results: result.rows,
+    });
+});
+
+module.exports.changePassword = catchAsync(async (req, res, next) => {
+    const jwt = req.body.jwt;
+    if (!jwt) return next(new AppError('no JWT was provided', 400));
+    const isValidJwt = await jsonwebtoken.verify(
+        jwt,
+        process.env.PASSWORD_RECOVERY_JWT_SECRET
+    );
+    console.log({ isValidJwt });
+
+    if (!isValidJwt) return next(new AppError('invalid jwt', 401));
+
+    res.status(200).json({
+        ok: true,
     });
 });
