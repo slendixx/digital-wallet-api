@@ -12,4 +12,6 @@ router
     );
 router.route('/forgot-password').post(controller.createPasswordRecoveryToken);
 
+router.route('/reset-password').post(controller.resetPassword);
+
 module.exports = router;

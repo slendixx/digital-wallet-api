@@ -44,3 +44,7 @@ module.exports.createPasswordRecoveryToken = catchAsync(
         });
     }
 );
+
+module.exports.resetPassword = catchAsync(async (req,res,next)=>{
+
+})
