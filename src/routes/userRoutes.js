@@ -15,4 +15,8 @@ router
         controller.getById
     );
 
+router
+    .route('/:userId/changePassword')
+    .patch(passport.authenticate('jwt'), controller.changePassword);
+
 module.exports = router;

@@ -1,6 +1,7 @@
 const passport = require('passport');
 const JwtCookieComboStrategy = require('passport-jwt-cookiecombo');
 const { Strategy: LocalStrategy } = require('passport-local');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const testPassword = require('bcrypt').compare;
 const user = require('../models/user');
 
@@ -50,6 +51,24 @@ passport.use(
             return done(null, payload, {
                 message: 'authentication successful',
             });
+        }
+    )
+);
+passport.use(
+    new JwtStrategy(
+        {
+            secretOrKey: process.env.JWT_SECRET,
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        },
+        async (payload, done) => {
+            const { id: userId } = payload;
+            const result = await user.select(userId);
+            if (!result.ok) return done(result.message);
+
+            if (result.rows.length === 0)
+                return done(null, false, { message: 'Invalid token' });
+            const [userData] = result.rows;
+            return done(null, userData);
         }
     )
 );
