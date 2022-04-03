@@ -2,11 +2,11 @@ const nodemailer = require('nodemailer');
 module.exports.send = async ({ to, emailBody }) => {
     // create reusable transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
         auth: {
-            user: 'cassandre.west26@ethereal.email',
-            pass: 'NjXNGjZhdD8Cs96JxY',
+            user: process.env.SMTP_USERNAME,
+            pass: process.env.SMTP_PASSWORD,
         },
     });
 
