@@ -3,6 +3,7 @@ const AppError = require('../errors/appError');
 const { catchAsync } = require('../errors/errorController');
 const user = require('../models/user');
 const createPasswordRecoveryToken = require('../auth/passwordRecoveryToken');
+const email = require('../models/email');
 
 //by default, JWT tokens will expire after 15 minutes = 900 seconds
 module.exports.signJwt = catchAsync(async (req, res, next) => {
@@ -34,17 +35,18 @@ module.exports.signJwt = catchAsync(async (req, res, next) => {
 
 module.exports.createPasswordRecoveryToken = catchAsync(
     async (req, res, next) => {
-        const email = req.body.email;
+        const userEmail = req.body.email;
 
-        const result = await createPasswordRecoveryToken(email);
+        const result = await createPasswordRecoveryToken(userEmail);
         if (!result.ok)
             return next(new AppError(result.message, result.status));
-        res.status(201).json({
+        const passwordRecoveryToken = result.jwt;
+        await email.send({ to: userEmail, emailBody: passwordRecoveryToken });
+
+        res.status(200).json({
             ok: true,
         });
     }
 );
 
-module.exports.resetPassword = catchAsync(async (req,res,next)=>{
-
-})
+module.exports.resetPassword = catchAsync(async (req, res, next) => {});
