@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const AppError = require('../errors/appError');
 const { catchAsync } = require('../errors/errorController');
 const user = require('../models/user');
+const jsonwebtoken = require('jsonwebtoken');
 const createPasswordRecoveryToken = require('../auth/passwordRecoveryToken');
 const email = require('../models/email');
 
@@ -49,4 +50,30 @@ module.exports.createPasswordRecoveryToken = catchAsync(
     }
 );
 
-module.exports.resetPassword = catchAsync(async (req, res, next) => {});
+module.exports.changePassword = catchAsync(async (req, res, next) => {
+    const { passwordRecoveryToken, newPassword } = req.body;
+    if (!passwordRecoveryToken)
+        return next(
+            new AppError('No password recovery token was provided', 400)
+        );
+    let tokenData;
+    try {
+        tokenData = await jsonwebtoken.verify(
+            passwordRecoveryToken,
+            process.env.PASSWORD_RECOVERY_JWT_SECRET
+        );
+    } catch (error) {
+        return next(new AppError(error.message, 401));
+    }
+    const result = await user.updatePassword({
+        id: tokenData.id,
+        newPassword,
+        token: tokenData.passwordRecoveryToken,
+    });
+
+    if (!result.ok) return next(new AppError(result.message, result.status));
+
+    res.status(200).json({
+        ok: true,
+    });
+});
