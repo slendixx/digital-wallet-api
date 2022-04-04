@@ -3,7 +3,7 @@ const userValidation = require('../models/userValidation');
 const user = require('../models/user');
 
 const passwordRecoveryTokenLength =
-    Number(proces.env.PASSWORD_RECOVERY_TOKEN_LENGTH) || 30;
+    Number(process.env.PASSWORD_RECOVERY_TOKEN_LENGTH) || 30;
 
 module.exports = async (email) => {
     const result = {
@@ -23,13 +23,18 @@ module.exports = async (email) => {
         result.status = 404;
         return result;
     }
-
-    // create response email body
     const [userData] = response.rows;
+
+    //create and store password recovery token
     const passwordRecoveryToken = generatePasswordRecoveryToken(
         passwordRecoveryTokenLength
     );
+    await user.updatePasswordRecoveryToken({
+        id: userData.id,
+        token: passwordRecoveryToken,
+    });
 
+    // create response jwt
     const jwtExpirationTime = Number(process.env.JWT_EXPIRATION_TIME) || 900;
     let jwt;
     try {
