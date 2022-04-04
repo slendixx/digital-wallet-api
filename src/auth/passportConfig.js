@@ -62,7 +62,10 @@ passport.use(
         },
         async (payload, done) => {
             const { id: userId } = payload;
-            const result = await user.select(userId);
+            const result = await user.select({
+                id: userId,
+                getPasswordRecoveryToken: false,
+            });
             if (!result.ok) return done(result.message);
 
             if (result.rows.length === 0)

@@ -49,14 +49,16 @@ module.exports.insert = async (data) => {
     return result;
 };
 
-module.exports.select = async (id) => {
+module.exports.select = async ({ id, getPasswordRecoveryToken }) => {
     const result = {
         ok: false,
     };
 
+    let selectFields = 'id, first_name, last_name';
+    if (getPasswordRecoveryToken) selectFields += ',password_recovery_token';
+
     const connection = db.getConnection();
-    const selectUserQuery =
-        'SELECT id, first_name, last_name FROM user WHERE id = ?';
+    const selectUserQuery = 'SELECT' + selectFields + 'FROM user WHERE id = ?';
     try {
         result.rows = await db.queryAsync(connection, selectUserQuery, id);
         result.ok = true;

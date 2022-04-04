@@ -2,6 +2,9 @@ const jsonwebtoken = require('jsonwebtoken');
 const userValidation = require('../models/userValidation');
 const user = require('../models/user');
 
+const passwordRecoveryTokenLength =
+    Number(proces.env.PASSWORD_RECOVERY_TOKEN_LENGTH) || 30;
+
 module.exports = async (email) => {
     const result = {
         ok: false,
@@ -23,11 +26,15 @@ module.exports = async (email) => {
 
     // create response email body
     const [userData] = response.rows;
+    const passwordRecoveryToken = generatePasswordRecoveryToken(
+        passwordRecoveryTokenLength
+    );
+
     const jwtExpirationTime = Number(process.env.JWT_EXPIRATION_TIME) || 900;
     let jwt;
     try {
         jwt = await jsonwebtoken.sign(
-            { id: userData.id },
+            { id: userData.id, passwordRecoveryToken },
             process.env.PASSWORD_RECOVERY_JWT_SECRET,
             {
                 expiresIn: jwtExpirationTime,
@@ -42,3 +49,16 @@ module.exports = async (email) => {
     result.ok = true;
     return result;
 };
+
+function generatePasswordRecoveryToken(length) {
+    let result = '';
+    let characters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(
+            Math.floor(Math.random() * charactersLength)
+        );
+    }
+    return result;
+}
