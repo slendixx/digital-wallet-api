@@ -32,20 +32,11 @@ const validateUserData = async (userData) => {
     if (!userData.password) {
         throw new AppError('No password was provided', 400);
     }
-    if (userData.password.length < 12) {
-        throw new AppError('Password must be at least 12 characters long', 400);
-    }
-    if (userData.password.length > 255) {
-        throw new AppError(
-            'Password must be less than 255 characters long',
-            400
-        );
-    }
-    const isValidPassword = await testPasswordAgainstDenyList(
+    const [isValidPassword, invalidPasswordMessage] = validatePassword(
         userData.password
     );
     if (!isValidPassword) {
-        throw new AppError('Password is in deny list.', 400);
+        throw new AppError(invalidPasswordMessage, 400);
     }
 };
 const isValidEmail = (email) => {
@@ -53,6 +44,25 @@ const isValidEmail = (email) => {
         String(email).toLowerCase()
     );
 };
+/**
+ * @param {String} password
+ * @returns {[Boolean,String]}
+ */
+const validatePassword = async (password) => {
+    if (password.length < 12) {
+        return [false, 'Password must be at least 12 characters long'];
+    }
+    if (password.length > 255) {
+        return [false, 'Password must be less than 255 characters long'];
+    }
+    const allowedPassword = await testPasswordAgainstDenyList(password);
+    if (!allowedPassword) {
+        return [false, 'Password is in deny list.'];
+    }
+
+    return [true, ''];
+};
 
 module.exports.validateEmail = isValidEmail;
 module.exports.validateUserData = validateUserData;
+module.exports.validatePassword = validatePassword;
