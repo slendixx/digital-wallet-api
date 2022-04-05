@@ -24,7 +24,6 @@ module.exports.insert = async (data) => {
     //TODO research why it is not advisable to use pepper with bcrypt
     userData.password = hashedPassword;
 
-    console.log({ completedUserData: userData });
     //query db
     const connection = db.getConnection();
     const insertUserQuery =
@@ -112,6 +111,7 @@ module.exports.updatePassword = async ({ id, newPassword, token }) => {
     };
     const [isValidPassword, invalidPasswordMessage] =
         await validation.validatePassword(newPassword);
+
     if (!isValidPassword) {
         result.message = invalidPasswordMessage;
         result.status = 400;

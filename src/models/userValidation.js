@@ -1,7 +1,7 @@
 const testPasswordAgainstDenyList = require('../security/passwordDenyList');
 const AppError = require('../errors/appError');
 
-const validateUserData = async (userData) => {
+module.exports.validateUserData = async (userData) => {
     if (!userData.firstName) {
         throw new AppError('No first name was provided', 400);
     }
@@ -23,7 +23,7 @@ const validateUserData = async (userData) => {
     if (!userData.email) {
         throw new AppError('No email name was provided', 400);
     }
-    if (!isValidEmail(userData.email)) {
+    if (!module.exports.isValidEmail(userData.email)) {
         throw new AppError('Invalid email', 400);
     }
     if (userData.email > 255) {
@@ -32,14 +32,13 @@ const validateUserData = async (userData) => {
     if (!userData.password) {
         throw new AppError('No password was provided', 400);
     }
-    const [isValidPassword, invalidPasswordMessage] = validatePassword(
-        userData.password
-    );
+    const [isValidPassword, invalidPasswordMessage] =
+        await module.exports.validatePassword(userData.password);
     if (!isValidPassword) {
         throw new AppError(invalidPasswordMessage, 400);
     }
 };
-const isValidEmail = (email) => {
+module.exports.isValidEmail = (email) => {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
         String(email).toLowerCase()
     );
@@ -48,7 +47,7 @@ const isValidEmail = (email) => {
  * @param {String} password
  * @returns {[Boolean,String]}
  */
-const validatePassword = async (password) => {
+module.exports.validatePassword = async (password) => {
     if (password.length < 12) {
         return [false, 'Password must be at least 12 characters long'];
     }
@@ -62,7 +61,3 @@ const validatePassword = async (password) => {
 
     return [true, ''];
 };
-
-module.exports.validateEmail = isValidEmail;
-module.exports.validateUserData = validateUserData;
-module.exports.validatePassword = validatePassword;
