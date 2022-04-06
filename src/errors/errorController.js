@@ -17,11 +17,8 @@ module.exports.handleUnhandledRejection = (server) => {
     };
 };
 
-const handleUnhandledRoutes = (error, res) => {
-    res.status(error.statusCode).json({
-        status: error.status,
-        message: "Can't find the requested route on this server",
-    });
+const formatUnhandledRouteError = (error) => {
+    error.message = "Can't find the requested route on this server";
 };
 
 const sendErrorDev = (error, res) => {
@@ -32,11 +29,21 @@ const sendErrorDev = (error, res) => {
     });
 };
 
-const handleDuplicateField = (error) => {
+const formatDuplicateFieldError = (error) => {
     if (error?.message.includes('usuario.email')) {
-        error.message = 'the specified email is already in use';
+        error.message = 'The specified email is already in use';
     }
     return error;
+};
+
+const formatNoReferencedRowError = (error) => {
+    //format response message
+    const [, failingReference] = error.message.split('REFERENCES');
+    const [referenceName] = failingReference.split('(');
+    const outputMessage =
+        "Referenced row doesn't exist for table" + referenceName;
+
+    error.message = outputMessage;
 };
 
 const sendErrorProd = (error, res) => {
@@ -60,11 +67,13 @@ module.exports.globalErrorHandler = (error, req, res, next) => {
     error.status = error.status || 'error';
 
     if (process.env.NODE_ENV === 'dev') return sendErrorDev(error, res);
-    if (error.message === 'not found') handleUnhandledRoutes(error, res);
+    if (error.message === 'not found') formatUnhandledRouteError(error);
     if (error.message.includes('ER_DUP_ENTRY')) {
-        error.isOperational = true;
-        handleDuplicateField(error);
+        formatDuplicateFieldError(error);
         //error.isOperational = true;
+    }
+    if (error.message.includes('ER_NO_REFERENCED_ROW')) {
+        formatNoReferencedRowError(error);
     }
     return sendErrorProd(error, res);
 };
