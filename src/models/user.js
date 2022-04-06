@@ -11,9 +11,8 @@ module.exports.insert = async (data) => {
     try {
         await validation.validateUserData(userData);
     } catch (error) {
-        console.log('validation error: ' + error.message);
-        result.ok = false;
-        result.message = error; //TODO test validation errors
+        result.message = error.message;
+        result.status = 400;
         return result;
     }
     //complete user data
