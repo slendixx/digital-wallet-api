@@ -15,7 +15,7 @@ module.exports.create = catchAsync(async (req, res, next) => {
 
     if (!result.ok) return next(new AppError(result.message, 400));
 
-    res.status(200).json({
+    res.status(201).json({
         ok: true,
         status: result.message,
     });
