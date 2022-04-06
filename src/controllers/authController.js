@@ -28,7 +28,6 @@ module.exports.signJwt = catchAsync(async (req, res, next) => {
 
             return res.status(200).json({
                 ok: true,
-                jwt: token,
             });
         }
     );
