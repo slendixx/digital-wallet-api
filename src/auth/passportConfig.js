@@ -31,7 +31,7 @@ passport.use(
                     message: 'Invalid email or password',
                 });
 
-            return done(null, userData, { message: 'Login successful' });
+            return done(null, userData.id, { message: 'Login successful' });
         }
     )
 );
@@ -51,27 +51,6 @@ passport.use(
             return done(null, payload, {
                 message: 'authentication successful',
             });
-        }
-    )
-);
-passport.use(
-    new JwtStrategy(
-        {
-            secretOrKey: process.env.JWT_SECRET,
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        },
-        async (payload, done) => {
-            const { id: userId } = payload;
-            const result = await user.select({
-                id: userId,
-                getPasswordRecoveryToken: false,
-            });
-            if (!result.ok) return done(result.message);
-
-            if (result.rows.length === 0)
-                return done(null, false, { message: 'Invalid token' });
-            const [userData] = result.rows;
-            return done(null, userData);
         }
     )
 );
