@@ -35,5 +35,23 @@ module.exports.create = catchAsync(async (req, res, next) => {
         status: result.message,
     });
 });
-module.exports.updateById = catchAsync(async (req, res, next) => {});
+module.exports.updateById = catchAsync(async (req, res, next) => {
+    const { id: userId } = req.user;
+    const { transactionId } = req.params;
+    const transactionData = {
+        transactionId,
+        amount: req.body.amount,
+        reasonId: req.body.reasonId,
+        reference: req.body.reference,
+    };
+
+    const result = await transaction.update({ userId, data: transactionData });
+
+    if (!result.ok) return next(new AppError(result.message, result.status));
+
+    res.status(200).json({
+        ok: true,
+        status: result.message,
+    });
+});
 module.exports.deleteById = catchAsync(async (req, res, next) => {});

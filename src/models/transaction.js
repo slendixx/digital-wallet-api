@@ -63,3 +63,18 @@ module.exports.insert = async ({ data }) => {
     }
     return result;
 };
+
+module.exports.update = async ({ userId, data }) => {
+    const transactionData = { ...data };
+    const result = {
+        ok: false,
+    };
+    //validate data
+    try {
+        validation.validateTransactionData(transactionData);
+    } catch (error) {
+        result.message = error.message;
+        result.status = 400;
+        return result;
+    }
+};
