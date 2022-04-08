@@ -41,7 +41,7 @@ module.exports.insert = async ({ data }) => {
     const [timePartFormatted] = timePart.split('.');
     transactionData.date = datePartFormatted + ' ' + timePartFormatted;
 
-    //query db
+    // query db
     const insertQuery =
         'INSERT INTO transaction (amount,user_id,transaction_type_id,reason_id,date) VALUES (?)';
     const connection = db.getConnection();
@@ -64,7 +64,7 @@ module.exports.insert = async ({ data }) => {
     return result;
 };
 
-module.exports.update = async ({ userId, data }) => {
+module.exports.update = async ({ transactionId, data }) => {
     const transactionData = { ...data };
     const result = {
         ok: false,
@@ -77,4 +77,26 @@ module.exports.update = async ({ userId, data }) => {
         result.status = 400;
         return result;
     }
+    //query db
+    const updateQuery =
+        'UPDATE transaction SET amount=?,SET user_id=?,SET transaction_type_id=?,SET reason_id=?,SET date=? WHERE id=?';
+    const connection = db.getConnection();
+    const values = [
+        transactionData.amount,
+        transactionData.userId,
+        transactionData.transactionTypeId,
+        transactionData.reasonId,
+        transactionData.date,
+        transactionId,
+    ];
+
+    try {
+        result.rows = await db.queryAsync(connection, updateQuery, [values]);
+
+        result.ok = true;
+    } catch (error) {
+        result.message = error;
+        result.ok = false;
+    }
+    return result;
 };
