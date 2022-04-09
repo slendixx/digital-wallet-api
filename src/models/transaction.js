@@ -7,7 +7,7 @@ module.exports.select = async ({ userId }) => {
     };
     const connection = db.getConnection();
     const selectQuery =
-        'SELECT transaction_id, amount, transaction_type, reason, reference FROM v_user_transactions WHERE user_id = ?';
+        'SELECT transaction_id, amount, transaction_type, concept, reference FROM v_user_transactions WHERE user_id = ?';
     try {
         result.rows = await db.queryAsync(connection, selectQuery, userId);
         result.ok = true;
@@ -43,13 +43,13 @@ module.exports.insert = async ({ data }) => {
 
     // query db
     const insertQuery =
-        'INSERT INTO transaction (amount,user_id,transaction_type_id,reason_id,date) VALUES (?)';
+        'INSERT INTO transaction (amount,user_id,transaction_type_id,concept,date) VALUES (?)';
     const connection = db.getConnection();
     const values = [
         transactionData.amount,
         transactionData.userId,
         transactionData.transactionTypeId,
-        transactionData.reasonId,
+        transactionData.conceptId,
         transactionData.date,
     ];
 
@@ -79,13 +79,13 @@ module.exports.update = async ({ transactionId, data }) => {
     }
     //query db
     const updateQuery =
-        'UPDATE transaction SET amount=?,SET user_id=?,SET transaction_type_id=?,SET reason_id=?,SET date=? WHERE id=?';
+        'UPDATE transaction SET amount=?,SET user_id=?,SET transaction_type_id=?,SET concept=?,SET date=? WHERE id=?';
     const connection = db.getConnection();
     const values = [
         transactionData.amount,
         transactionData.userId,
         transactionData.transactionTypeId,
-        transactionData.reasonId,
+        transactionData.conceptId,
         transactionData.date,
         transactionId,
     ];
