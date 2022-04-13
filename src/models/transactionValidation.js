@@ -16,6 +16,9 @@ module.exports.validateTransactionData = (data) => {
     if (!data.reasonId) {
         throw new AppError('No reason id was provided', 400);
     }
+    if (!data.date) {
+        throw new AppError('No date was provided', 400);
+    }
 };
 /*
 transaction table columns:

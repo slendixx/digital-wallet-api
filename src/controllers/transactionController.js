@@ -25,6 +25,7 @@ module.exports.create = catchAsync(async (req, res, next) => {
         transactionTypeId: req.body.transactionTypeId,
         reasonId: req.body.reasonId,
         reference: req.body.reference,
+        date: req.body.date,
     };
     const result = await transaction.insert({ data: transactionData });
 

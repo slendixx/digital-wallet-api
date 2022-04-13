@@ -7,7 +7,7 @@ module.exports.select = async ({ userId }) => {
     };
     const connection = db.getConnection();
     const selectQuery =
-        'SELECT transaction_id, amount, transaction_type, concept, reference FROM v_user_transactions WHERE user_id = ?';
+        'SELECT transaction_id, amount, transaction_type, concept, reference, date FROM v_user_transactions WHERE user_id = ?';
     try {
         result.rows = await db.queryAsync(connection, selectQuery, userId);
         result.ok = true;
@@ -33,13 +33,7 @@ module.exports.insert = async ({ data }) => {
         return result;
     }
     //complete data
-    const currentDatetime = new Date();
-    //'returned date format: YYYY-MM-DDTHH:MM:SS.ZZZ'
-    const [datePartFormatted, timePart] = currentDatetime
-        .toISOString()
-        .split('T');
-    const [timePartFormatted] = timePart.split('.');
-    transactionData.date = datePartFormatted + ' ' + timePartFormatted;
+    transactionData.date = formatDateToMysqlDatetime(transactionData.date);
 
     // query db
     const insertQuery =
@@ -77,6 +71,9 @@ module.exports.update = async ({ transactionId, data }) => {
         result.status = 400;
         return result;
     }
+    //complete data
+    transactionData.date = formatDateToMysqlDatetime(transactionData.date);
+
     //query db
     const updateQuery =
         'UPDATE transaction SET amount=?,SET user_id=?,SET transaction_type_id=?,SET concept=?,SET date=? WHERE id=?';
@@ -99,4 +96,11 @@ module.exports.update = async ({ transactionId, data }) => {
         result.ok = false;
     }
     return result;
+};
+
+const formatDateToMysqlDatetime = (date) => {
+    //'returned date format: YYYY-MM-DDTHH:MM:SS.ZZZ'
+    const [datePartFormatted, timePart] = date.toISOString().split('T');
+    const [timePartFormatted] = timePart.split('.');
+    return datePartFormatted + ' ' + timePartFormatted;
 };
