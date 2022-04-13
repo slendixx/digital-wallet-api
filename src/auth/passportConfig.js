@@ -1,7 +1,6 @@
 const passport = require('passport');
 const JwtCookieComboStrategy = require('passport-jwt-cookiecombo');
 const { Strategy: LocalStrategy } = require('passport-local');
-const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const testPassword = require('bcrypt').compare;
 const user = require('../models/user');
 
