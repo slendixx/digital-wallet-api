@@ -19,9 +19,10 @@ module.exports.getAll = catchAsync(async (req, res, next) => {
     });
 });
 module.exports.create = catchAsync(async (req, res, next) => {
+    const { id: userId } = req.user;
     const transactionData = {
         amount: req.body.amount,
-        userId: req.body.userId,
+        userId,
         transactionTypeId: req.body.transactionTypeId,
         reasonId: req.body.reasonId,
         reference: req.body.reference,
@@ -41,12 +42,16 @@ module.exports.updateById = catchAsync(async (req, res, next) => {
     const { transactionId } = req.params;
     const transactionData = {
         transactionId,
+        userId,
         amount: req.body.amount,
         reasonId: req.body.reasonId,
         reference: req.body.reference,
     };
 
-    const result = await transaction.update({ userId, data: transactionData });
+    const result = await transaction.update({
+        transactionId,
+        data: transactionData,
+    });
 
     if (!result.ok) return next(new AppError(result.message, result.status));
 
@@ -55,4 +60,12 @@ module.exports.updateById = catchAsync(async (req, res, next) => {
         status: result.message,
     });
 });
-module.exports.deleteById = catchAsync(async (req, res, next) => {});
+module.exports.deleteById = catchAsync(async (req, res, next) => {
+    const { id: userId } = req.user;
+    const { transactionId } = req.params;
+    const result = await transaction.delete({ transactionId, userId });
+
+    if (!result.ok) return next(new AppError(result.message, result.status));
+
+    res.status(204).send();
+});
