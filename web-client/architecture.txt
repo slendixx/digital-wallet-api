@@ -1,0 +1,21 @@
+/src
+    /assets
+
+    /components
+        /forms
+        /tables
+        /buttons
+        /layout
+            /navigation
+        /routing
+
+    /services
+    /utils
+        /constants
+        /helpers
+    /views
+        /home
+        /user
+        /login
+
+
