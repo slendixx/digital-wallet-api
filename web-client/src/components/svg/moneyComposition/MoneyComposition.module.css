@@ -1,0 +1,31 @@
+.composition__container {
+  display: block;
+  height: 15rem;
+  width: 10rem;
+  position: relative;
+}
+
+.composition__icon--1 {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.composition__icon--2 {
+  position: absolute;
+  bottom: 57%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.composition__icon--3 {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.composition__icon--wallet {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
