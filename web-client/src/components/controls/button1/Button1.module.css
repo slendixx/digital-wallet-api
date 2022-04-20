@@ -1,0 +1,14 @@
+button {
+  padding: 1rem 2rem;
+  color: white;
+  background-color: #1ac79b;
+  border-radius: 10px;
+  font-size: 1.75rem;
+  border: none;
+  box-shadow: 10px 10px 20px 1px rgba(0, 0, 0, 0.3);
+  transition: 0.5s;
+}
+button:hover {
+  transform: translate(-50%, -4px);
+  box-shadow: 10px 10px 20px 1px rgba(0, 0, 0, 0.3);
+}
