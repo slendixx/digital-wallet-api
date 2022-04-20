@@ -1,5 +1,6 @@
 import styles from "./Banner.module.css";
 import Img1 from "../../../assets/img1.jpg";
+import Button1 from "../../../components/controls/button1/Button1";
 
 const Banner = () => {
   return (
@@ -12,6 +13,7 @@ const Banner = () => {
         className={`${styles.banner__image}`}
         alt="smiling standing man watching his cell phone"
       ></img>
+      <Button1 className={styles.button1}>Get Started!</Button1>
     </div>
   );
 };
