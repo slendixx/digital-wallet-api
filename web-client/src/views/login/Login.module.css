@@ -11,6 +11,9 @@
 .link {
   margin: 1rem 0;
 }
+.link--inline {
+  margin: 0 1rem;
+}
 
 @media (max-width: 900px) {
   .form {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import useRequestAPI from "./useRequestAPI";
 import {
   validateEmail,
@@ -12,7 +13,20 @@ const useLoginForm = () => {
   const [validationError, setValidationError] = useState(false);
   const [validationErrorMessage, setValidationErrorMessage] = useState("");
   const [unauthorized, setUnauthorized] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
+  const [passwordChanged, setPasswordChanged] = useState(false);
   const { sendRequest } = useRequestAPI();
+  const navigate = useNavigate();
+  const { state } = useLocation();
+
+  //this state is passed from the SignupForm view
+  useEffect(() => {
+    if (state?.accountCreated) setAccountCreated(true);
+  }, [state?.accountCreated]);
+  //this state is passed from the ChangePasswordForm view
+  useEffect(() => {
+    if (state?.passwordChanged) setPasswordChanged(true);
+  }, [state?.passwordChanged]);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -40,15 +54,15 @@ const useLoginForm = () => {
   };
 
   const resolveHandler = (response) => {
-    console.log(response);
     setUnauthorized(false);
     setformSubmitted(false);
-    setValidationError("");
+    setValidationError(false);
+    navigate("/account", { replace: true });
   };
   const rejectHandler = (response) => {
     setUnauthorized(true);
     setformSubmitted(false);
-    setValidationError("");
+    setValidationError(false);
   };
 
   useEffect(() => {
@@ -61,6 +75,9 @@ const useLoginForm = () => {
       resolveHandler,
       rejectHandler,
     });
+    setUnauthorized(false);
+    setformSubmitted(false);
+    setValidationError(false);
   }, [formSubmitted, email, password, sendRequest]);
   return {
     email,
@@ -71,6 +88,8 @@ const useLoginForm = () => {
     validationError,
     validationErrorMessage,
     unauthorized,
+    accountCreated,
+    passwordChanged,
   };
 };
 

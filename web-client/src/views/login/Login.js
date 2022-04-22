@@ -11,7 +11,16 @@ import Alert from "react-bootstrap/Alert";
 const Login = () => {
   const loginForm = useLoginForm();
   let alert = "";
-
+  if (loginForm.accountCreated)
+    alert = (
+      <Alert variant="success">
+        Your account was successfully created. Please log in to get started
+      </Alert>
+    );
+  if (loginForm.passwordChanged)
+    alert = (
+      <Alert variant="success">Your password was successfully changed</Alert>
+    );
   if (loginForm.unauthorized)
     alert = <Alert variant="danger">Invalid Email or Password</Alert>;
   if (loginForm.validationError)
@@ -57,8 +66,16 @@ const Login = () => {
       </Row>
       <Row>
         <Col className={styles.form__col}>
-          <Link className={styles.link} to="/reset-password">
+          <Link className={styles.link} to="/forgot-password">
             Forgot your password?
+          </Link>
+        </Col>
+      </Row>
+      <Row>
+        <Col className={styles.form__col}>
+          Dont have an account?
+          <Link className={styles["link--inline"]} to="/signup">
+            Create new account
           </Link>
         </Col>
       </Row>
