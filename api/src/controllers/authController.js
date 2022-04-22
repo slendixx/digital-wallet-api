@@ -41,7 +41,16 @@ module.exports.createPasswordRecoveryToken = catchAsync(
         if (!result.ok)
             return next(new AppError(result.message, result.status));
         const passwordRecoveryToken = result.jwt;
-        await email.send({ to: userEmail, emailBody: passwordRecoveryToken });
+
+        const passwordChangeLink =
+            process.env.WEB_CLIENT_HOST ||
+            'http://127.0.0.1:3001' +
+                '/change-password?token=' +
+                passwordRecoveryToken;
+
+        const emailBody = `<a href=${passwordChangeLink}>Click here to set a new password</a>`;
+
+        await email.send({ to: userEmail, emailBody });
 
         res.status(200).json({
             ok: true,
