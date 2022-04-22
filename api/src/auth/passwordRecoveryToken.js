@@ -10,8 +10,7 @@ module.exports = async (email) => {
         ok: false,
     };
     //validate email
-    const isValidEmail = userValidation.validateEmail(email);
-    if (!isValidEmail) {
+    if (!userValidation.isValidEmail(email)) {
         result.message = 'Invalid email';
         result.status = 400;
         return result;
