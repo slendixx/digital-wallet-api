@@ -1,0 +1,13 @@
+.subtitle {
+  margin: 4rem 0;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  text-transform: capitalize;
+  font-size: 3rem;
+  color: #0f206c;
+}
+
+.sm {
+  font-size: 2rem;
+}
