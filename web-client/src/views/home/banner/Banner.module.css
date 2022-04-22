@@ -32,6 +32,11 @@
 .button1 {
   position: absolute;
   bottom: 2rem;
+  padding: 1rem 2rem;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.button1:hover {
+  transform: translate(-50%, -4px);
 }
