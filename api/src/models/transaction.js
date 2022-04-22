@@ -58,7 +58,7 @@ module.exports.insert = async ({ data }) => {
     return result;
 };
 
-module.exports.update = async ({ transactionId, data}) => {
+module.exports.update = async ({ transactionId, data }) => {
     const transactionData = { ...data };
     const result = {
         ok: false,
@@ -76,7 +76,7 @@ module.exports.update = async ({ transactionId, data}) => {
 
     //query db
     const updateQuery =
-        'UPDATE transaction SET amount=?,SET user_id=?,SET transaction_type_id=?,SET concept=?,SET date=? WHERE id=?'
+        'UPDATE transaction SET amount=?,SET user_id=?,SET transaction_type_id=?,SET concept=?,SET date=? WHERE id=?';
     const connection = db.getConnection();
     const values = [
         transactionData.amount,
@@ -105,18 +105,14 @@ const formatDateToMysqlDatetime = (date) => {
     return datePartFormatted + ' ' + timePartFormatted;
 };
 
-module.exports.delete = ({ transactionId, userId }) => {
+module.exports.delete = async ({ transactionId, userId }) => {
     const result = {
         ok: true,
     };
     //query d
-    const deleteQuery =
-        'DELETE FROM transaction where id = ? AND user_id = ?';
+    const deleteQuery = 'DELETE FROM transaction where id = ? AND user_id = ?';
     const connection = db.getConnection();
-    const values = [
-        transactionId,
-        userId
-    ];
+    const values = [transactionId, userId];
 
     try {
         result.rows = await db.queryAsync(connection, deleteQuery, values);
