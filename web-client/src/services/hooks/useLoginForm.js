@@ -55,6 +55,7 @@ const useLoginForm = () => {
     if (!formSubmitted) return;
     sendRequest({
       method: "post",
+      url: "/auth/login",
       data: { email, password },
       withCredentials: false,
       resolveHandler,

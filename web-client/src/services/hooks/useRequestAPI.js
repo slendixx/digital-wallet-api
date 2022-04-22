@@ -8,13 +8,14 @@ const useRequestAPI = () => {
    */
   const sendRequest = ({
     method = "get",
+    url = "",
     data = {},
     headers = {},
     withCredentials = true,
     resolveHandler,
     rejectHandler,
   }) => {
-    axios({ method, data, headers, url: APIHost + "/auth/login" })
+    axios({ method, data, headers, url: APIHost + url })
       .then(resolveHandler)
       .catch(rejectHandler);
   };
