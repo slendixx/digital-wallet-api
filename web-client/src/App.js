@@ -6,13 +6,14 @@ import Login from "./views/login/Login";
 import ForgotPassword from "./views/passwordRecovery/forgotPasswordForm/ForgotPasswordForm";
 import Signup from "./views/signup/Signup";
 import ChangePassword from "./views/passwordRecovery/changePasswordForm/ChangePasswordForm";
+import Account from "./views/account/Account";
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
           <Route path="/home" element={<Home />} />
-          <Route path="/account" />
+          <Route path="/account" element={<Account />} />
           <Route path="/account/transactions" />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
