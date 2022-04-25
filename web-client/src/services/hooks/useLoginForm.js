@@ -5,6 +5,7 @@ import {
   validateEmail,
   validatePassword,
 } from "../validation/validateUserData";
+import useSession from "../session/useSession";
 
 const useLoginForm = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ const useLoginForm = () => {
   const { sendRequest } = useRequestAPI();
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { createSession } = useSession();
 
   //this state is passed from the SignupForm view
   useEffect(() => {
@@ -53,13 +55,14 @@ const useLoginForm = () => {
     setformSubmitted(true);
   };
 
-  const resolveHandler = (response) => {
+  const resolveHandler = async (response) => {
     setUnauthorized(false);
     setformSubmitted(false);
     setValidationError(false);
+    await createSession(response.data.userId);
     navigate("/account", { replace: true });
   };
-  const rejectHandler = (response) => {
+  const rejectHandler = () => {
     setUnauthorized(true);
     setformSubmitted(false);
     setValidationError(false);
@@ -71,7 +74,6 @@ const useLoginForm = () => {
       method: "post",
       url: "/auth/login",
       data: { email, password },
-      withCredentials: false,
       resolveHandler,
       rejectHandler,
     });
