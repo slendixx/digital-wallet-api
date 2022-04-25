@@ -22,7 +22,7 @@ module.exports.create = catchAsync(async (req, res, next) => {
 });
 
 module.exports.getById = catchAsync(async (req, res, next) => {
-    const id = Number(req.params.userId);
+    const { id } = req.user;
     const result = await user.select({ id, getPasswordRecoveryToken: false });
 
     if (!result.ok) return next(new AppError(result.message, 400));

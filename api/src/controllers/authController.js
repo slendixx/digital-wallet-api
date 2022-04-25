@@ -20,14 +20,15 @@ module.exports.signJwt = catchAsync(async (req, res, next) => {
             if (error) return next(new AppError(error.message, 500));
 
             res.cookie('jwt', token, {
-                httpOnly: process.env.COOKIE_HTTP_ONLY !== undefined,
-                sameSite: process.env.COOKIE_SAME_SITE !== undefined,
-                signed: process.env.COOKIE_SIGNED !== undefined,
-                secure: process.env.COOKIE_SECURE !== undefined,
+                httpOnly: process.env.COOKIE_HTTP_ONLY === 'true',
+                sameSite: process.env.COOKIE_SAME_SITE === 'true',
+                signed: process.env.COOKIE_SIGNED === 'true',
+                secure: process.env.COOKIE_SECURE === 'true',
             });
 
             return res.status(200).json({
                 ok: true,
+                userId: req.user,
             });
         }
     );
