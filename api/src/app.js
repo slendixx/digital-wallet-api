@@ -12,10 +12,16 @@ const authRouter = require('./routes/authRoutes');
 const app = express();
 
 //set up middleware stack
-app.use(cors());
+app.use(
+    cors({
+        credentials: true,
+        origin: 'http://localhost:3001',
+    })
+);
 app.use(express.json()); //json request body parser
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use((req, res, next) => {
+    console.log(req.signedCookies);
     console.log('request to: ' + req.originalUrl);
     console.log('method: ' + req.method);
 
